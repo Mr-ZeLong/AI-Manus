@@ -1,33 +1,36 @@
-from typing import Optional, Union
 import logging
 from functools import lru_cache
-from fastapi import Request, Header, HTTPException, status, Depends, Query
+from typing import Optional, Union
+
+from fastapi import Depends, HTTPException, Query, Request, status
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from starlette.websockets import WebSocket
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from app.infrastructure.external.file.gridfsfile import get_file_storage
-from app.infrastructure.external.search import get_search_engine
-from app.domain.models.user import User, UserRole
+
 from app.application.errors.exceptions import UnauthorizedError
-from app.core.config import get_settings
 
 # Import all required services
 from app.application.services.agent_service import AgentService
-from app.application.services.file_service import FileService
 from app.application.services.auth_service import AuthService
-from app.application.services.token_service import TokenService
 from app.application.services.email_service import EmailService
+from app.application.services.file_service import FileService
+from app.application.services.token_service import TokenService
+from app.core.config import get_settings
+from app.domain.models.user import User, UserRole
 from app.infrastructure.external.cache import get_cache
+from app.infrastructure.external.file.gridfsfile import get_file_storage
 
 # Import all required dependencies for agent service
 from app.infrastructure.external.llm.openai_llm import OpenAILLM
 from app.infrastructure.external.sandbox.docker_sandbox import DockerSandbox
+from app.infrastructure.external.search import get_search_engine
 from app.infrastructure.external.task.redis_task import RedisStreamTask
-from app.infrastructure.utils.llm_json_parser import LLMJsonParser
-from app.infrastructure.repositories.mongo_agent_repository import MongoAgentRepository
-from app.infrastructure.repositories.mongo_session_repository import MongoSessionRepository
 from app.infrastructure.repositories.file_mcp_repository import FileMCPRepository
+from app.infrastructure.repositories.mongo_agent_repository import MongoAgentRepository
+from app.infrastructure.repositories.mongo_session_repository import (
+    MongoSessionRepository,
+)
 from app.infrastructure.repositories.user_repository import MongoUserRepository
-
+from app.infrastructure.utils.llm_json_parser import LLMJsonParser
 
 # Configure logging
 logger = logging.getLogger(__name__)

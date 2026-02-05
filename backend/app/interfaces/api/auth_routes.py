@@ -1,25 +1,37 @@
-from fastapi import APIRouter, Depends
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 import logging
 
-from app.application.services.auth_service import AuthService
-from app.application.services.token_service import TokenService
-from app.application.services.file_service import FileService
-from app.application.services.agent_service import AgentService
-from app.application.services.email_service import EmailService
+from fastapi import APIRouter, Depends
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+
 from app.application.errors.exceptions import (
-    UnauthorizedError, NotFoundError, BadRequestError
+    BadRequestError,
+    NotFoundError,
+    UnauthorizedError,
 )
-from app.interfaces.dependencies import get_auth_service, get_current_user, get_file_service, get_agent_service, get_token_service, get_email_service
-from app.interfaces.schemas.base import APIResponse
-from app.interfaces.schemas.auth import (
-    LoginRequest, RegisterRequest, ChangePasswordRequest, ChangeFullnameRequest, RefreshTokenRequest,
-    SendVerificationCodeRequest, ResetPasswordRequest,
-    LoginResponse, RegisterResponse, AuthStatusResponse, RefreshTokenResponse,
-    UserResponse
-)
+from app.application.services.auth_service import AuthService
+from app.application.services.email_service import EmailService
 from app.core.config import get_settings
 from app.domain.models.user import User
+from app.interfaces.dependencies import (
+    get_auth_service,
+    get_current_user,
+    get_email_service,
+)
+from app.interfaces.schemas.auth import (
+    AuthStatusResponse,
+    ChangeFullnameRequest,
+    ChangePasswordRequest,
+    LoginRequest,
+    LoginResponse,
+    RefreshTokenRequest,
+    RefreshTokenResponse,
+    RegisterRequest,
+    RegisterResponse,
+    ResetPasswordRequest,
+    SendVerificationCodeRequest,
+    UserResponse,
+)
+from app.interfaces.schemas.base import APIResponse
 
 logger = logging.getLogger(__name__)
 
